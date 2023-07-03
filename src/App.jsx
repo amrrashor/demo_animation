@@ -143,27 +143,37 @@ const prevVideo = () => {
   };
   
   const initailVarinats = {
-    fadeIn: { opacity: 0, scale:1 },
-    fadeOut: {opacity:0, scale:1},
-    zoomIn: { scale: 1.04, opacity: 1 },
-    zoomOut: { scale: 0.98, opacity: 1 },
-    leak1:{scale: 1.04, opacity:0.7},
+    fadeIn: { opacity: 0, scale:1},
+    fadeOut: {opacity: 0, scale:1},
+    zoomIn: { opacity: 0,scale: 1 },
+    zoomOut: { opacity: 0,scale: 0.98},
+    leak1: { opacity: 0, scale: 1 },
+    leak2: { opacity: 0, scale: 1 },
+    glitch1: { opacity: 0, scale: 1 },
+    glitch2: { opacity: 0, scale: 1 },
+    
   }
 
   const variants = {
-    fadeIn: { opacity: 1 },
+    fadeIn: { opacity: 1, scale:0.9},
     fadeOut: {opacity:1, scale:0.95},
-    zoomIn: { scale: 1.04, opacity: 1 },
-    zoomOut: { scale: 0.9, opacity: 1 },
-    leak1:{scale: 1.04, opacity:1},
+    zoomIn: {  opacity: 1, scale: 1 },
+    zoomOut: { opacity: 1, scale: 0.9 },
+    leak1: { opacity: 1, scale: 1 },
+    leak2: { opacity: 1, scale: 1 },
+    glitch1: { opacity: 1, scale: 1 },
+    glitch2:{ opacity: 1,scale: 1},
   }
 
   const exitVariants = {
-    fadeIn: { opacity: 0, scale:1.08},
-    fadeOut: {opacity:0, scale:0.8},
-    zoomIn: { scale: 1.04, opacity: 0 },
-    zoomOut: { scale: 0.7, opacity: 0 },
-    leak1: {scale: 1.04, opacity:0},
+    fadeIn:{ opacity: 0, scale:1.08, filter:"blur(20px)"},
+    fadeOut:{opacity:0, scale:0.8, filter:"blur(20px)"},
+    zoomIn: {opacity: 0 ,scale: 1.8, filter:"blur(20px)"},
+    zoomOut:{opacity: 0 ,scale: 0.7, filter:"blur(20px)"},
+    leak1: { opacity: 0, filter: "blur(20px) sepia(100%) saturate(300%) hue-rotate(70deg) invert(10%)" },
+    leak2: { opacity: 0, filter: "blur(20px) sepia(100%) saturate(300%) hue-rotate(320deg) invert(5%)" },
+    glitch1: { opacity: [1, 0, 1, 0], filter: "blur(10px) invert(-40%)", x: [-6, 6, -6, 0], y: [6, -6, 6, 0] },
+    glitch2: {opacity: [1, 0, 1, 0] , filter:"blur(10px) invert(100%)", x: [5, -5, 5, 0], y: [-10, 10, -10, 0]},
   }
 
   return (
@@ -174,31 +184,41 @@ const prevVideo = () => {
             activePreview === item.id ? (
               <motion.video
                 key={item.id}
-                initial={activePreview === 1 ? { opacity: 1 }
+                initial={activePreview === 1 ? { opacity: 1}
                   : fadeIn ? initailVarinats.fadeIn
-                    : fadeOut ? initailVarinats.fadeOut
-                      :  zoomIn ? initailVarinats.zoomIn
-                        : zoomOut ? initailVarinats.zoomOut
-                          : leak1 ? initailVarinats.leak1 
-                            : null}
-                transition={{ duration: 0.7, type:'keyframes'}}
+                  : fadeOut ? initailVarinats.fadeOut
+                  :  zoomIn ? initailVarinats.zoomIn
+                  : zoomOut ? initailVarinats.zoomOut
+                  : leak1 ? initailVarinats.leak1 
+                  : leak2 ? initailVarinats.leak2
+                  : glitch1 ? initailVarinats.glitch1
+                  : glitch2 ? initailVarinats.glitch2
+                  : null
+                }
+                transition={{ duration:1, type:'keyframes', times: glitch1 ? [0, 0.25, 0.5, 1] : glitch2 ? [0, 0.25, 0.5, 1] : null}}
                 variants={variants}
                 animate={
-                  fadeIn ? 'fadeIn'
+                    fadeIn ? 'fadeIn'
                   : fadeOut ? 'fadeOut'
                   : zoomIn ? 'zoomIn'
                   : zoomOut ? 'zoomOut'
                   : leak1 ? 'leak1'
+                  : leak2 ? 'leak2'
+                  : glitch1 ? 'glitch1'
+                  : glitch2 ? 'glitch2'
                   : ''
                 }
                 src={item.src}
                 controls
                 exit={fadeIn ? exitVariants.fadeIn :
                   fadeOut ? exitVariants.fadeOut :
-                    zoomIn ? exitVariants.zoomIn :
-                      zoomOut ? exitVariants.zoomOut : 
-                        leak1 ? exitVariants.leak1 : 
-                          null
+                  zoomIn ? exitVariants.zoomIn :
+                  zoomOut ? exitVariants.zoomOut : 
+                  leak1 ? exitVariants.leak1 : 
+                  leak2 ? exitVariants.leak2 : 
+                  glitch1 ? exitVariants.glitch1 : 
+                  glitch2 ? exitVariants.glitch2 : 
+                  null
                 }
               >
               </motion.video>
@@ -214,7 +234,10 @@ const prevVideo = () => {
         <button  onClick={() => handleAnimation("fadeOut")} style={{margin:"5px"}}>Fade Out</button>
         <button onClick={() => handleAnimation("zoomIn")} style={{ margin: "5px" }}>Zoom In</button>
         <button onClick={() => handleAnimation("zoomOut")} style={{ margin: "5px" }}>Zoom Out</button>
-        <button onClick={() => handleAnimation("leak1")} style={{margin:"5px"}}>Leak 1</button>
+        <button onClick={() => handleAnimation("leak1")} style={{ margin: "5px" }}>Leak 1</button>
+        <button onClick={() => handleAnimation("leak2")} style={{ margin: "5px" }}>Leak 2</button>
+        <button onClick={() => handleAnimation("glitch1")} style={{ margin: "5px" }}>Glitch 1</button>
+        <button onClick={() => handleAnimation("glitch2")} style={{margin:"5px"}}>Glitch 2</button>
       </div>
 
       <button style={{margin:"5px"}} onClick={prevVideo}>Previous Video</button>
